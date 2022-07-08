@@ -1,6 +1,6 @@
-My solution  of integer linear programming exercise, with implementation using Gurobi.
+My solution  of integer linear programming exercise for Algorithimcs course, with implementation using Gurobi.
 
-The task was about distributing tasks between employees.
+The task was to distribute tasks between employees.
 
 Input:
  - bipartite graph, where one group of nodes represent employees, second group represent nodes and edges represent ability of employee to perform given task
