@@ -1,0 +1,52 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{mathtools}
+\usepackage{amsmath, amsthm}
+\usepackage{enumerate}
+\usepackage{polski}
+\usepackage{enumitem}
+\newlist{legal}{enumerate}{10}
+\setlist[legal]{label*=\arabic*.}
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2.2cm, right=2.2cm]{geometry}
+\title{PD Algorytmika}
+\author{Monika Michaluk}
+
+\begin{document}
+
+\maketitle
+
+Aby wyrazić wszystkie zależności pomiędzy wartościami i spełnić warunki problemu, w rozwiązaniu wprowadzam do mieszanego programu liniowego następujące zmienne:
+\begin{itemize}
+    \item  $\forall_{i,j:\, x_iy_j \in E} \; p_{ij}$ - zmienna binarna, 1 jeśli j-te zadanie jest przydzielone do i-tego pracownika, 0 wpp.
+    \item  $\forall_{i,j:\, x_iy_j \in E} \; w_{ij}$ - zmienna, której wartość oznacza, jaką część zadania j wykonuje pracownik i.
+    \item  $\forall_{1 \leq j \leq m} \; z_{j}$ - zmienna binarna, 1 jeśli j-te zadanie jest wykonywane przez przynajmniej jednego pracownika, 0 wpp.
+    \item $\forall_{1 \leq j \leq m} \; x_{j}$ - zmienna, której wartość oznacza, jaką część zadania będzie wykonywać każdy pracownik przydzielony do tego zadania. Inaczej: $\frac{1}{x_j}$ oznacza liczbę pracowników przydzielonych do danego zadania.
+    \item  $\forall_{1 \leq i \leq n, 1 \leq j \leq m} \; \delta_{ij}$ - pomocnicza zmienna binarna, $1$ jeśli do j-tego zadania przypisanych jest i pracowników, $0$ jeśli przydzielono do niego inną liczbę pracowników.
+
+\end{itemize}
+
+Pomiędzy powyższymi zmiennymi występują naturalne zależności i ograniczenia, które muszą być spełnione, żeby znaczenia tych zmiennych były rzeczywiście jak opisałam i żeby dobrze opisywały problem.
+
+Ograniczenia:
+\begin{itemize}
+    \item Dla każdego j:
+    $x_j = \sum_{i=1}^n \frac{\delta_{ij}}{i}$ oraz $z_j = \sum_{i=1}^n \delta_{ij}$ sprawiają, że $x_j$ przyjmuje zgodnie z zamierzeniem tylko wartości ze zbioru $\{0, 1, \frac{1}{2}, \ldots, \frac{1}{n} \}$ (skoro $z_j$ jest zmienną binarną, to co najwyżej jedno $\delta_{ij}$ jest nieujemne, więc suma $\sum_{i=1}^n \frac{\delta_{ij}}{i}$ jest równa $\frac{1}{i}$ dla pewnego $i$ lub $0$). Jednocześnie wiąże to wartość zmiennej $z_j$, która jest równa $1$ tylko wtedy, gdy zadanie wykonuje dodatnia liczba pracowników.
+    \item Dla każdego $j$, liczba pracowników przypisanych do zadania, policzona przez sumowanie zmiennych $p_ij$ musi być równa $\frac{1}{x_j}$ gdy $x_j \neq 0$ i $0$ wpp.:
+    $$\sum_{i=1}^n p_{ij} = \sum_{i=1}^n \delta_{ij}\cdot i$$
+    \item Dla każdego $i$, obciążenie pracownika i wynosi maksymalnie $b_i$: $\sum_{j=1}^m w_{ij} \leq b_i$
+    \item Aby zapewnić, że $w_{ij} = x_j$ wtw. $p_{ij} = 1$ oraz, że $w_{ij} = 0$ wtw. $p_{ij} = 0$, wystarczy dodać ograniczenia:
+    $$\forall_{i,j:\, x_iy_j \in E} \; w_{ij} \leq p_{ij}$$
+    $$\forall_{i,j:\, x_iy_j \in E} \; w_{ij} \leq x_{j}$$
+    $$\forall_{i,j:\, x_iy_j \in E} \; w_{ij} \geq 0$$
+    $$\forall_{i,j:\, x_iy_j \in E} \; w_{ij} \geq p_{ij} - 1 + x_j$$
+    \item Dla każdego $j$, Jeśli zadanie $j$ jest wykonywane, to musi nad nim pracować co najmniej $l_j$ pracowników: $$\sum_{i=1}^n p_{ij} \geq l_j z_j$$
+    \item Co najwyżej $B$ zadań: $$\sum_{j=1}^m z_j \leq B$$
+\end{itemize}
+
+W implementacji ignorowane są zadania, których nie może wykonywać żaden pracownik, tzn. j nie przebiega po wartościach od 1 do m, tylko po zbiorze mniejszej (bądź równej) mocy. Tak samo w powyższych definicjach ograniczeń indeksy w sumach powinny przebiegać po odpowiednio ograniczonych zbiorach indeksów, ale tak zapis jest czytelniejszy.
+
+
+Ostatecznie, w zadaniu maksymalizujemy funkcję celu:
+$$\sum_{j=1}^m c_j z_j$$
+
+\end{document}
